@@ -1,0 +1,6 @@
+mauna-drop-grub-signed-and-shim
+mauna-drop-the-support-of-memtest86
+mauna-fix-persistent-iso
+mauna-remove-live-cdrom-sourceslist
+mauna-umount-sysfs-recursive
+

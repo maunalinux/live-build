@@ -1,0 +1,14 @@
+Author: Mauna Linux <dev@maunalinux.top>
+
+--- live-build-20220505.orig/scripts/build/binary_iso
++++ live-build-20220505/scripts/build/binary_iso
+@@ -146,7 +146,7 @@ case "${LB_BOOTLOADER_EFI}" in
+ 	grub-efi)
+ 		if [ -e binary/boot/grub/efi.img ]; then
+ 			XORRISO_OPTIONS="${XORRISO_OPTIONS} -e boot/grub/efi.img -no-emul-boot"
+-			XORRISO_OPTIONS="${XORRISO_OPTIONS} -isohybrid-gpt-basdat -isohybrid-apm-hfsplus"
++			XORRISO_OPTIONS="${XORRISO_OPTIONS} -append_partition 2 0x01 binary/boot/grub/efi.img"
+ 		else
+ 			Echo_message "No EFI boot code to include in the ISO"
+ 		fi
+

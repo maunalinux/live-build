@@ -1,0 +1,43 @@
+Source: live-build
+Section: misc
+Priority: optional
+Maintainer: Mauna Linux <dev@maunalinux.top>
+XSBC-Original-Maintainer: Debian Live <debian-live@lists.debian.org>
+Build-Depends:
+ debhelper-compat (= 13),
+ po4a,
+ gettext,
+Standards-Version: 4.6.0
+Rules-Requires-Root: no
+Homepage: https://wiki.debian.org/DebianLive
+Vcs-Browser: https://github.com/maunalinux/live-build
+Vcs-Git: https://github.com/maunalinux/live-build.git
+
+Package: live-build
+Architecture: all
+Depends:
+ debootstrap,
+ ${misc:Depends},
+Recommends:
+ apt-utils,
+ bzip2,
+ cpio,
+ cryptsetup,
+ file,
+ live-boot-doc,
+ live-config-doc,
+ live-manual-html | live-manual,
+ rsync,
+ systemd-container,
+ wget,
+ xz-utils,
+Suggests:
+ e2fsprogs,
+ parted,
+ mtd-utils,
+Description: Live System Build Components
+ The Debian Live project maintains the components to build Debian based Live
+ systems and the official Debian Live images themselves.
+ .
+ live-build contains the components to build a live system from a configuration
+ directory.
