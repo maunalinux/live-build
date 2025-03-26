@@ -28,8 +28,8 @@ Create_apt_sources_list ()
 			DISTRIBUTION=${LB_DISTRIBUTION_CHROOT}
 			;;
 		binary)
-			PARENT_MIRROR=${LB_PARENT_MIRROR_BINARY}
-			MIRROR=${LB_MIRROR_BINARY}
+			PARENT_MIRROR="${LB_PARENT_MIRROR_BINARY}"
+			MIRROR="${LB_MIRROR_BINARY}"
 			PARENT_MIRROR_SECURITY=${LB_PARENT_MIRROR_BINARY_SECURITY}
 			MIRROR_SECURITY=${LB_MIRROR_BINARY_SECURITY}
 			PARENT_DISTRIBUTION=${LB_PARENT_DISTRIBUTION_BINARY}
@@ -109,6 +109,17 @@ Create_apt_sources_list ()
 		if [ "${LB_DERIVATIVE}" = "true" ]; then
 			echo "deb ${MIRROR} ${_DISTRIBUTION}-updates ${LB_ARCHIVE_AREAS}" >> "${LIST_FILE}"
 			echo "deb-src ${MIRROR} ${_DISTRIBUTION}-updates ${LB_ARCHIVE_AREAS}" >> "${LIST_FILE}"
+		fi
+	fi
+
+	# Set proposed-updates repo
+	if [ "${LB_PROPOSED_UPDATES}" = "true" ]; then
+		echo "deb ${PARENT_MIRROR} ${PARENT_DISTRIBUTION}-proposed-updates ${LB_PARENT_ARCHIVE_AREAS}" >> "${PARENT_LIST_FILE}"
+		echo "deb-src ${PARENT_MIRROR} ${PARENT_DISTRIBUTION}-proposed-updates ${LB_PARENT_ARCHIVE_AREAS}" >> "${PARENT_LIST_FILE}"
+
+		if [ "${LB_DERIVATIVE}" = "true" ]; then
+			echo "deb ${MIRROR} ${_DISTRIBUTION}-proposed-updates ${LB_ARCHIVE_AREAS}" >> "${LIST_FILE}"
+			echo "deb-src ${MIRROR} ${_DISTRIBUTION}-proposed-updates ${LB_ARCHIVE_AREAS}" >> "${LIST_FILE}"
 		fi
 	fi
 

@@ -30,6 +30,15 @@ fi
 Echo_message "Begin bootstrapping system..."
 
 Check_package host /usr/sbin/debootstrap debootstrap
+Check_installed host /usr/bin/eatmydata eatmydata
+if [ "${INSTALL_STATUS}" -eq 0 ]
+then
+	Echo_message "eatmydata found. It will be used do disable the sync command in the second stage of debootstrap"
+	_EATMYDATA="eatmydata"
+else
+	# eatmydata is optional
+	_EATMYDATA=""
+fi
 
 # Checking stage file
 Check_stagefile "bootstrap"
@@ -53,11 +62,11 @@ then
 	DEBOOTSTRAP_OPTIONS="${DEBOOTSTRAP_OPTIONS} --arch=${LB_ARCHITECTURE}"
 fi
 
-if [ "${LB_ARCHIVE_AREAS}" != "main" ]
+if [ "${LB_PARENT_ARCHIVE_AREAS}" != "main" ]
 then
-	# Modify archive areas to remove leading/trailing whitespaces and replace other whitepspace with commas
-	DEBOOTSTRAP_OPTIONS="${DEBOOTSTRAP_OPTIONS} --components=$(echo ${LB_ARCHIVE_AREAS} | sed -e 's| |,|g')"
-	FOREIGN_DEBOOTSTRAP_OPTIONS="--components=$(echo ${LB_ARCHIVE_AREAS} | sed -e 's| |,|g')"
+	# Modify archive areas to remove leading/trailing whitespaces and replace other whitespace with commas
+	DEBOOTSTRAP_OPTIONS="${DEBOOTSTRAP_OPTIONS} --components=$(echo ${LB_PARENT_ARCHIVE_AREAS} | sed -e 's| |,|g')"
+	FOREIGN_DEBOOTSTRAP_OPTIONS="--components=$(echo ${LB_PARENT_ARCHIVE_AREAS} | sed -e 's| |,|g')"
 fi
 
 if [ "${_VERBOSE}" = "true" ]
@@ -110,26 +119,7 @@ if [ -n "${LB_BOOTSTRAP_QEMU_ARCHITECTURE}" ]; then
 	Echo_message "Running debootstrap second stage under QEMU"
 	Chroot chroot /bin/sh /debootstrap/debootstrap --second-stage ${FOREIGN_DEBOOTSTRAP_OPTIONS}
 else
-	debootstrap ${DEBOOTSTRAP_OPTIONS} "${LB_PARENT_DISTRIBUTION_CHROOT}" chroot "${LB_PARENT_MIRROR_BOOTSTRAP}" ${DEBOOTSTRAP_SCRIPT}
-fi
-
-# If there's an os-release file, copy it to /etc/ and add some extra fields that identify the live image
-if [ -e chroot/usr/lib/os-release ]; then
-	# Ensure a potential update doesn't clobber our changes
-	if ! Chroot chroot dpkg-divert --list /etc/os-release | grep -q /etc/os-release; then
-		Chroot chroot dpkg-divert --quiet --local --add --no-rename --divert /etc/os-release.debootstrap /etc/os-release
-	fi
-	rm -f chroot/etc/os-release
-	cp chroot/usr/lib/os-release chroot/etc/os-release
-	# Ensure the metadata is sensible, even for unstable images
-	if [ "${LB_PARENT_DISTRIBUTION_CHROOT}" = "sid" ] || [ "${LB_PARENT_DISTRIBUTION_CHROOT}" = "unstable" ]; then
-		sed -i "s/VERSION_CODENAME=.*/VERSION_CODENAME=sid/g" chroot/etc/os-release
-		echo "RELEASE_TYPE=development" >> chroot/etc/os-release
-	fi
-	cat <<EOF >> chroot/etc/os-release
-IMAGE_ID=live
-BUILD_ID=$(date ${DATE_UTC_OPTION} -d @${SOURCE_DATE_EPOCH} +%Y%m%dT%H%M%SZ)
-EOF
+	${_EATMYDATA} debootstrap ${DEBOOTSTRAP_OPTIONS} "${LB_PARENT_DISTRIBUTION_CHROOT}" chroot "${LB_PARENT_MIRROR_BOOTSTRAP}" ${DEBOOTSTRAP_SCRIPT}
 fi
 
 # Deconfiguring debootstrap configurations

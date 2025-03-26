@@ -40,4 +40,3 @@ partconf-mkfstab
 # Not needed on arches that use partman
 mdcfg
 lvmcfg
-

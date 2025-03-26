@@ -52,7 +52,11 @@ Check_package chroot /usr/lib/ISOLINUX/isohdpfx.bin isolinux
 if [ "${LB_BOOTLOADER_BIOS}" = "grub-pc" ]
 then
 	Check_package chroot /usr/lib/grub/i386-pc/boot_hybrid.img grub-pc-bin
-fi 
+fi
+if [ "${LB_INITRAMFS}" = "dracut-live" ]
+then
+	Check_package chroot /usr/bin/implantisomd5 isomd5sum
+fi
 
 # Restoring cache
 Restore_package_cache binary
@@ -160,7 +164,7 @@ case "${LB_BOOTLOADER_EFI}" in
 	grub-efi)
 		if [ -e binary/boot/grub/efi.img ]; then
 			XORRISO_OPTIONS="${XORRISO_OPTIONS} -e boot/grub/efi.img -no-emul-boot"
-			XORRISO_OPTIONS="${XORRISO_OPTIONS} -isohybrid-gpt-basdat -isohybrid-apm-hfsplus"
+			XORRISO_OPTIONS="${XORRISO_OPTIONS} -append_partition 2 0x01 binary/boot/grub/efi.img"
 		else
 			Echo_message "No EFI boot code to include in the ISO"
 		fi
@@ -211,6 +215,16 @@ case "${LB_BUILD_WITH_CHROOT}" in
 		rm -f binary.sh
 		;;
 esac
+
+# Handle checksumming for dracut-live
+if [ "${LB_CHECKSUMS}" = "md5" ] && [ "${LB_INITRAMFS}" = "dracut-live" ]
+then
+	rm -f chroot/${IMAGE}
+	mv ${IMAGE} chroot/${IMAGE}
+	Echo_message "Embedding md5sum into ISO for dracut verification"
+	Chroot chroot "implantisomd5 ${IMAGE}"
+	mv chroot/${IMAGE} ${IMAGE}
+fi
 
 # Set the timestamp of the image
 touch -d@${SOURCE_DATE_EPOCH} ${IMAGE}

@@ -3,7 +3,7 @@
 .\" This file was generated with po4a. Translate the source file.
 .\"
 .\"*******************************************************************
-.TH LIVE\-BUILD 1 2025\-02\-16 2:20250113mauna1 "Debian Live Project"
+.TH LIVE\-BUILD 1 2025\-03\-25 2:20250225mauna1 "Debian Live Project"
 
 .SH NOM
 \fBlb_config\fP \- Create config directory
@@ -135,7 +135,7 @@
 .br
   [\fB\-\-image\-name\fP \fINAME\fP]
 .br
-  [\fB\-\-initramfs\fP none|live\-boot]
+  [\fB\-\-initramfs\fP none|live\-boot|dracut\-live]
 .br
   [\fB\-\-initramfs\-compression\fP bzip2|gzip|lzma]
 .br
@@ -465,8 +465,8 @@ debootstrap).
 .IP \fB\-\-debug\fP 4
 turns on debugging informational messages.
 .IP "\fB\-d\fP|\fB\-\-distribution\fP \fICODENAME\fP" 4
-defines the distribution of the resulting live system. This currently
-defaults to 'buster'. The value 'sid' can be used for Debian unstable.
+defines the distribution of the resulting live system. This defaults to
+\&'testing'. The value 'sid' can be used for Debian unstable.
 .IP "\fB\-\-distribution\-binary\fP \fICODENAME\fP" 4
 defines the distribution enabled in the resulting live system (defaults to
 the value set in \fB\-\-distribution\fP)
@@ -522,14 +522,16 @@ locations, and don't want to specify them all of the time. This option
 allows you to ignore such global settings.
 .IP "\fB\-\-image\-name\fP \fINAME\fP" 4
 sets the base name of the image. Defaults to live\-image.
-.IP "\fB\-\-initramfs\fP none|live\-boot" 4
+.IP "\fB\-\-initramfs\fP none|live\-boot|dracut\-live" 4
 sets the name of the package that contains the live system specific
 initramfs modification and defaults to live\-boot. Using 'none' is useful if
-the resulting system image should not be a live image (experimental).
-.IP "\fB\-\-initramfs\-compression\fP bzip2|gzip|lzma]"
+the resulting system image should not be a live image (experimental). Note
+that dracut requires the CD label in the kernel command line, so you might
+want to set \fB\-\-iso\-volume\fP explicitly.
+.IP "\fB\-\-initramfs\-compression\fP bzip2|gzip|lzma" 4
 defines the compression program to be used to compress the
 initramfs. Defaults to 'gzip'.
-.IP "\fB\-\-initsystem\fP sysvinit|systemd|none]"
+.IP "\fB\-\-initsystem\fP sysvinit|systemd|none" 4
 defines the init system. Defaults to 'systemd'.
 .IP "\fB\-\-interactive\fP true|shell|x11|xnest|false" 4
 defines if after the chroot stage and before the beginning of the binary
@@ -722,7 +724,7 @@ increases the verbosity of messages output by \fBlb build\fP.
 defines if win32\-loader should be included in the binary image or not.
 .IP "\fB\-\-zsync\fP true|false" 4
 defines whether a file for distributing the image in \fIzsync\fP(1) format will
-be generated. Defaults to true.
+be generated. Defaults to false.
 
 .SH ENVIRONMENT
 Currently, command line switches can also be specified through the

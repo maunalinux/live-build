@@ -98,6 +98,12 @@ case "${LB_INITRAMFS}" in
 		INITFS="live"
 		;;
 
+	dracut-live)
+		INITFS="live"
+		LB_BOOTAPPEND_LIVE="$(echo "${LB_BOOTAPPEND_LIVE}" | sed "s|@ISOVOLUME_TS@|$(date $DATE_UTC_OPTION -d@${SOURCE_DATE_EPOCH} +%Y%m%d-%H:%M)|")"
+		LB_BOOTAPPEND_LIVE_FAILSAFE="$(echo "${LB_BOOTAPPEND_LIVE_FAILSAFE}" | sed "s|@ISOVOLUME_TS@|$(date $DATE_UTC_OPTION -d@${SOURCE_DATE_EPOCH} +%Y%m%d-%H:%M)|")"
+		;;
+
 	*)
 		INITFS="boot"
 		;;
@@ -115,8 +121,25 @@ DEFAULT_INITRD="initrd.img-$(echo ${DEFAULT_KERNEL} | sed -e 's|vmlinuz-||')"
 
 KERNEL_LIVE="/${INITFS}/${DEFAULT_KERNEL}"
 INITRD_LIVE="/${INITFS}/${DEFAULT_INITRD}"
-APPEND_LIVE="${LB_BOOTAPPEND_LIVE} findiso=\${iso_path}"
 FLAVOUR_LIVE="${DEFAULT_FLAVOUR}"
+
+# live-boot and dracut use different kernel parameters for loopback
+# booting
+case "${LB_INITRAMFS}" in
+	live-boot)
+		APPEND_LIVE="${LB_BOOTAPPEND_LIVE} findiso=\${iso_path}"
+		# Turn off 'quiet', otherwise the progress and result are not shown
+		APPEND_VERIFY_CHECKSUMS=$(echo ${APPEND_LIVE} verify-checksums | sed -e 's|quiet||')
+		;;
+	dracut-live)
+		APPEND_LIVE="${LB_BOOTAPPEND_LIVE} iso-scan/filename=\${iso_path}"
+		APPEND_VERIFY_CHECKSUMS="${APPEND_LIVE} rd.live.check"
+		;;
+	none)
+		APPEND_LIVE="${LB_BOOTAPPEND_LIVE}"
+		APPEND_VERIFY_CHECKSUMS="${APPEND_LIVE} verify-checksums"
+		;;
+esac
 
 # Ensure fresh live entries
 LIVE_ENTRIES_TMP="${_TARGET}/live.cfg.tmp"
@@ -242,6 +265,12 @@ else
 	rm -f "${_TARGET}"/memtest.cfg
 fi
 
+if [ "${LB_CHECKSUMS}" != "none" ]; then
+	ENABLE_VERIFY_CHECKSUMS="true"
+else
+	ENABLE_VERIFY_CHECKSUMS="false"
+fi
+
 # These must be held in variables to avoid mistake by checkbashisms
 LINUX_INSTALL="source /boot/grub/install_start.cfg"
 LINUX_ADVANCED_INSTALL="source /boot/grub/install.cfg"
@@ -263,6 +292,8 @@ sed -i \
     -e "s|@APPEND_INSTALL@|${LB_BOOTAPPEND_INSTALL}|" \
     -e "s|@ENABLE_INSTALL_MENU@|${ENABLE_INSTALL_MENU}|" \
     -e "s|@ENABLE_MEMTEST@|${ENABLE_MEMTEST}|" \
+    -e "s|@ENABLE_VERIFY_CHECKSUMS@|${ENABLE_VERIFY_CHECKSUMS}|" \
+    -e "s|@APPEND_VERIFY_CHECKSUMS@|${APPEND_VERIFY_CHECKSUMS}|" \
     -e "s|@MEMTEST_DIR@|${MEMTEST_DIR}|" \
     -e "s|@MEMTEST_BIN@|${MEMTEST_BIN}|" \
     -e "s|@MEMTEST_VERSION@|${LB_MEMTEST}|" \

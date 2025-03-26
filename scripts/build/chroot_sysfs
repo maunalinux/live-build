@@ -65,7 +65,7 @@ case "${_ACTION}" in
 		# Unmounting /sys
 		if [ -e chroot/sys/class ]
 		then
-			umount chroot/sys
+			umount --recursive chroot/sys
 		fi
 
 		# Removing stage file
