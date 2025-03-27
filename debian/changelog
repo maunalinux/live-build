@@ -1,9 +1,14 @@
+live-build (2:20250225mauna2) mauna; urgency=medium
+
+  * Remove grub-efi-amd64-unsigned from required packages
+
+ -- Mauna Linux <dev@maunalinux.top>  Wed, 26 Mar 2025 22:37:55 -0300
+
 live-build (2:20250225mauna1) mauna; urgency=medium
 
   [ Mauna Linux ]
   * Fix persistent iso
   * Unmount sysfs recursive
-  * Calamares also needs the unsigned GRUB packages for offline installation
 
   [ Roland Clobus ]
   * Change default for zsync to false
