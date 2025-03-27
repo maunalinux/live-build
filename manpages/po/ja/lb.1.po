@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: live-build\n"
-"POT-Creation-Date: 2025-03-25 13:43-0300\n"
+"POT-Creation-Date: 2025-03-26 22:41-0300\n"
 "PO-Revision-Date: 2014-08-28 02:52+0900\n"
 "Last-Translator: victory <victory.deb@gmail.com>\n"
 "Language-Team: none\n"
@@ -27,7 +27,7 @@ msgstr "LIVE-BUILD"
 #: en/lb_chroot.1:1 en/lb_clean.1:1 en/lb_config.1:1 en/lb_installer.1:1
 #: en/lb_source.1:1 en/live-build.7:1
 #, no-wrap
-msgid "2025-03-25"
+msgid "2025-03-27"
 msgstr ""
 
 #. type: TH
@@ -35,7 +35,7 @@ msgstr ""
 #: en/lb_chroot.1:1 en/lb_clean.1:1 en/lb_config.1:1 en/lb_installer.1:1
 #: en/lb_source.1:1 en/live-build.7:1
 #, no-wrap
-msgid "2:20250225mauna1"
+msgid "2:20250225mauna2"
 msgstr ""
 
 #. type: TH

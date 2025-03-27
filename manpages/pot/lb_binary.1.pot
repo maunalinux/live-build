@@ -6,8 +6,8 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: live-build 2:20250225mauna1\n"
-"POT-Creation-Date: 2025-03-25 13:43-0300\n"
+"Project-Id-Version: live-build 2:20250225mauna2\n"
+"POT-Creation-Date: 2025-03-26 22:41-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,7 +29,7 @@ msgstr ""
 #: en/lb_chroot.1:1 en/lb_clean.1:1 en/lb_config.1:1 en/lb_installer.1:1
 #: en/lb_source.1:1 en/live-build.7:1
 #, no-wrap
-msgid "2025-03-25"
+msgid "2025-03-27"
 msgstr ""
 
 #. type: TH
@@ -37,7 +37,7 @@ msgstr ""
 #: en/lb_chroot.1:1 en/lb_clean.1:1 en/lb_config.1:1 en/lb_installer.1:1
 #: en/lb_source.1:1 en/live-build.7:1
 #, no-wrap
-msgid "2:20250225mauna1"
+msgid "2:20250225mauna2"
 msgstr ""
 
 #. type: TH
